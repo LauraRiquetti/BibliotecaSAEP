@@ -15,7 +15,7 @@ class Livro extends Model
         'autor', 
         'ano', 
         'editora', 
-        'categoria', 
+        'genero', 
         'quantidade', 
         'status' // Não esqueça de adicionar o status aqui também!
     ];
