@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class LoginController extends Controller
+{
+    // Exibe a tela de login
+    public function index()
+    {
+        return view('login.index');
+    }
+
+    // Processa a tentativa de autenticação
+    public function authenticate(Request $request)
+    {
+        // 1. Valida os campos
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ], [
+            'email.required' => 'O campo e-mail é obrigatório.',
+            'email.email' => 'Digite um e-mail válido.',
+            'password.required' => 'A senha é obrigatória.',
+        ]);
+
+        // 2. Tenta logar (Auth::attempt verifica o e-mail e a senha criptografada no banco)
+        if (Auth::attempt($credentials)) {
+            // Gera uma nova ID de sessão por segurança (evita fixação de sessão)
+            $request->session()->regenerate();
+
+            // Redireciona para onde o usuário tentou ir ou para a lista de usuários
+            return redirect()->intended(route('usuarios.index'));
+        }
+
+        // 3. Se falhar, volta com erro
+        return back()->withErrors([
+            'email' => 'As credenciais fornecidas não constam em nossos registros.',
+        ])->onlyInput('email'); // Mantém o e-mail digitado no campo
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
+    }
+}
