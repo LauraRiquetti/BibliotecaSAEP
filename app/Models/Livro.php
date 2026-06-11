@@ -11,12 +11,11 @@ class Livro extends Model
     // app/Models/Livro.php
 
     protected $fillable = [
-        'nome', 
+        'titulo', 
         'autor', 
-        'ano', 
-        'editora', 
+        'ano_publicacao',
         'genero', 
-        'quantidade', 
+        'quantidade_paginas', 
         'status' // Não esqueça de adicionar o status aqui também!
     ];
 }

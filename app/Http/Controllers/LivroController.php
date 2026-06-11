@@ -25,20 +25,29 @@ class LivroController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nome' => 'required',
-            'autor' => 'required',
-            'editora' => 'required',
-            'ano' => 'required',
-            'categoria' => 'required',
-            'quantidade' => 'required',
+        // Validação alinhada com o seu formulário HTML
+        $dadosValidados = $request->validate([
+            'titulo' => 'required|string|max:255',
+            'autor' => 'required|string|max:255',
+            'ano_publicacao' => 'required|integer|min:0|max:' . date('Y'),
+            'genero' => 'nullable|string|max:255',
+            'quantidade_paginas' => 'nullable|integer|min:1',
+            'status' => 'required|string'
         ]);
 
-
-        Livro::create($request->all());
-
+        // Cria o registro usando os dados validados
+        Livro::create($dadosValidados);
 
         return redirect()->route('livros.index')->with('success', 'Livro criado com sucesso.');
+    }
+
+// Correção do Destroy para funcionar perfeitamente com a rota Resource
+    public function destroy($id)
+    {
+        $livro = Livro::findOrFail($id);
+        $livro->delete();
+
+        return redirect()->route('livros.index')->with('success', 'Livro deletado com sucesso.');
     }
 
 
@@ -62,11 +71,5 @@ class LivroController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Livro $livro)
-    {
-        $livro->delete();
-
-
-        return redirect()->route('livros.index')->with('success', 'Livro deletado com sucesso.');
-    }
+    
 }
