@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('emprestimos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('livro_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('usuarios')->onDelete('cascade');
+            $table->date('data_emprestimo');
+            $table->date('data_devolucao');
+            $table->enum('status', ['emprestado', 'disponívelS']);
             $table->timestamps();
         });
     }

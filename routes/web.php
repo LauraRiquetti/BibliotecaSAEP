@@ -1,18 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\LivroController;
+use App\Http\Controllers\EmprestimoController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// --- Rotas de Autenticação ---
+Route::get('/', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'authenticate'])->name('login.auth');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// --- Rotas do Sistema (CRUDs) ---
+// O Resource já cria automaticamente as rotas: index, create, store, edit, update e destroy
+Route::resource('usuarios', UsuarioController::class);
+Route::resource('livros', LivroController::class);
+Route::resource('emprestimos', EmprestimoController::class);
